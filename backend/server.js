@@ -69,9 +69,20 @@ app.get('/api/test-db', async (req, res) => {
 // (serão adicionadas nos próximos módulos)
 // ============================================
 
+
+// Importação das rotas
+const customersRoutes = require('./routes/customers');
+
+// Registro das rotas
+app.use('/api/customers', customersRoutes);
+
 // app.use('/api/ingredientes', ingredientesRoutes);
 // app.use('/api/receitas', receitasRoutes);
 
+
+const tablesRoutes = require('./routes/tables');
+
+app.use('/api/tables', tablesRoutes);
 // ============================================
 // TRATAMENTO DE ERROS
 // ============================================
