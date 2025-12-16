@@ -1,51 +1,158 @@
-## 👨‍🏫 Informações do Projeto
+# 🍽️ Sistema de Reservas para Restaurantes
 
-- **Instituição:** IFPE – Campus Jaboatão dos Guararapes
-- **Disciplina:** Estrutura de Dados - 2025.2
-- **Discentes:** Dayvid Santos
-
-# Projeto Final: Banco de Árvores Nativas do Nordeste 🌳
-
-Este é um projeto acadêmico desenvolvido em **Python com interface gráfica (Tkinter)**, que simula um banco de dados de árvores nativas do Nordeste brasileiro. A aplicação permite inserir, buscar, listar e remover árvores com armazenamento persistente em um arquivo JSON.
+Sistema web para gerenciamento de **clientes**, **mesas** e **reservas** de um restaurante, com controle de status, cancelamento lógico de reservas e regras de integridade para exclusão de dados.
 
 ---
 
-# 🌿 Banco de Árvores Nativas do Nordeste
+## 📌 Funcionalidades
 
-## 📋 Descrição
+### 👤 Clientes
+- Cadastrar cliente
+- Listar clientes
+- Excluir cliente  
+  🔒 **Regra:** um cliente só pode ser excluído se **não possuir reservas ativas** (reservas canceladas não bloqueiam a exclusão)
 
-Este é um projeto acadêmico desenvolvido em **Python com interface gráfica (Tkinter)**, que simula um banco de dados de árvores nativas do Nordeste brasileiro. A aplicação permite inserir, buscar, listar e remover árvores com armazenamento persistente em um arquivo JSON.
+### 🪑 Mesas
+- Cadastrar mesa (número, capacidade, status)
+- Listar mesas
+- Excluir mesa  
+  🔒 **Regra:** uma mesa só pode ser excluída se **não possuir reservas ativas**
 
----
-
-## 🎯 Objetivo
-
-Demonstrar o uso prático de estruturas de dados como:
-
-- 🌳 **Árvore Binária de Busca (BST)** para operações de busca;
-- 🔺 **Heap (Max-Heap)** com algoritmo **HeapSort** para ordenação;
-- 🧩 **Dicionários (dict)** para representar os dados de cada árvore.
-
----
-
-## 🛠️ Funcionalidades
-
-1. 📋 **Listar todas as árvores** (ordenadas com HeapSort)
-2. 🔍 **Buscar árvore por nome** (usando BST)
-3. ➕ **Inserir nova árvore**
-4. 🗑️ **Remover árvore por nome**
-5. 💾 **Armazenamento automático** em arquivo `arvores.json`
+### 📅 Reservas
+- Criar reserva vinculando cliente e mesa
+- Listar reservas
+- Cancelar reserva (cancelamento lógico)
+- Exibição de status da reserva (`ATIVA`, `CANCELADA`)
 
 ---
 
-## ▶️ Como Executar
+## 🧠 Regras de Negócio Implementadas
 
-### 1. Requisitos
+- ❌ **Reservas não são deletadas fisicamente**
+  - Ao cancelar, o status muda para `CANCELADA`
+- ✅ Clientes e mesas **podem ser excluídos** se:
+  - Todas as suas reservas estiverem com status `CANCELADA`
+- 🔗 Integridade garantida via:
+  - Regras no backend
+  - Chaves estrangeiras no banco de dados
 
-- Python 3 instalado
-- Nenhuma dependência externa (apenas bibliotecas padrão)
+---
 
-### 2. Executar o programa
+## 🛠️ Tecnologias Utilizadas
 
+### Backend
+- Node.js
+- Express
+- MySQL
+- mysql2
+- Arquitetura MVC
+- REST API
+
+### Frontend
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- Axios
+- react-hot-toast
+
+---
+
+## 🗄️ Estrutura do Banco de Dados (Resumo)
+
+### customers
+| Campo | Tipo |
+|------|------|
+| id | int |
+| name | varchar |
+| phone | varchar |
+
+### tables
+| Campo | Tipo |
+|------|------|
+| id | int |
+| number | int |
+| capacity | int |
+| status | varchar |
+
+### reservations
+| Campo | Tipo |
+|------|------|
+| id | int |
+| customer_id | int |
+| table_id | int |
+| reservation_datetime | datetime |
+| status | varchar |
+
+---
+
+## ▶️ Como Executar o Projeto
+
+### 1️⃣ Clonar o repositório
 ```bash
-python arvores_nativas_v1.4.1.py
+git clone https://github.com/seu-usuario/seu-repositorio.git
+```
+
+### 2️⃣ Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Configure o arquivo `.env`:
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=senha
+DB_NAME=restaurante_db
+```
+
+### 3️⃣ Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Acesse:
+```
+http://localhost:3000
+```
+
+---
+
+## 📂 Estrutura de Pastas (Simplificada)
+
+```
+backend/
+ ├─ controllers/
+ ├─ routes/
+ ├─ services/
+ ├─ database/
+ └─ server.js
+
+frontend/
+ ├─ app/
+ │   ├─ customers/
+ │   ├─ tables/
+ │   └─ reservations/
+ ├─ services/
+ └─ styles/
+```
+
+---
+
+## 🚀 Próximas Melhorias
+
+- Autenticação de usuários
+- Paginação de listas
+- Filtro por data/status de reservas
+- Soft delete para clientes e mesas
+- Dashboard com métricas
+
+---
+
+## 👨‍💻 Autor
+
+**Dayvid Ramon**  
+Projeto desenvolvido para fins acadêmicos e prática de desenvolvimento Full Stack.
