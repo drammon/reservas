@@ -159,45 +159,44 @@ exports.atualizar = async (req, res) => {
 // 5. DELETAR MESA
 // ============================================
 exports.deletar = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const [mesa] = await pool.query(
-            'SELECT * FROM tables WHERE id = ?',
-            [id]
-        );
+    const [tables] = await pool.query(
+      'SELECT id, status FROM tables WHERE id = ?',
+      [id]
+    );
 
-        if (mesa.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Mesa não encontrada'
-            });
-        }
-
-        const [reservas] = await pool.query(
-            'SELECT COUNT(*) as total FROM reservations WHERE table_id = ?',
-            [id]
-        );
-
-        if (reservas[0].total > 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Mesa possui reservas e não pode ser removida'
-            });
-        }
-
-        await pool.query('DELETE FROM tables WHERE id = ?', [id]);
-
-        res.json({
-            success: true,
-            message: 'Mesa removida com sucesso'
-        });
-    } catch (error) {
-        console.error('Erro ao deletar mesa:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Erro ao deletar mesa',
-            error: error.message
-        });
+    if (tables.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Mesa não encontrada'
+      });
     }
+
+    if (tables[0].status === 'INATIVA') {
+      return res.status(400).json({
+        success: false,
+        message: 'Mesa já está inativa'
+      });
+    }
+
+    // 🔥 Inativação lógica (CORRETO)
+    await pool.query(
+      'UPDATE tables SET status = "INATIVA" WHERE id = ?',
+      [id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Mesa inativada com sucesso'
+    });
+
+  } catch (error) {
+    console.error('Erro ao inativar mesa:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao inativar mesa'
+    });
+  }
 };

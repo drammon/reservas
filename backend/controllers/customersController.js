@@ -196,52 +196,56 @@ exports.atualizar = async (req, res) => {
 // ============================================
 
 exports.deletar = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        // Verifica se o cliente existe
-        const [customers] = await pool.query(
-            'SELECT * FROM customers WHERE id = ?',
-            [id]
-        );
+    const [customers] = await pool.query(
+      'SELECT id FROM customers WHERE id = ?',
+      [id]
+    );
 
-        if (customers.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Cliente não encontrado'
-            });
-        }
-
-        // Verifica se o cliente possui reservas
-        const [reservas] = await pool.query(
-            'SELECT COUNT(*) AS total FROM reservations WHERE customer_id = ?',
-            [id]
-        );
-
-        if (reservas[0].total > 0) {
-            return res.status(400).json({
-                success: false,
-                message: `Cliente possui ${reservas[0].total} reserva(s) e não pode ser removido`
-            });
-        }
-
-        // Remove o cliente
-        await pool.query(
-            'DELETE FROM customers WHERE id = ?',
-            [id]
-        );
-
-        res.json({
-            success: true,
-            message: 'Cliente deletado com sucesso',
-            data: customers[0]
-        });
-    } catch (error) {
-        console.error('Erro ao deletar cliente:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Erro ao deletar cliente',
-            error: error.message
-        });
+    if (customers.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Cliente não encontrado'
+      });
     }
+
+    // 🔥 Ignora QUALQUER variação de CANCELADA
+    // Verifica se o cliente possui reservas ATIVAS
+    const [reservas] = await pool.query(
+    `
+    SELECT COUNT(*) AS total 
+    FROM reservations 
+    WHERE customer_id = ?
+        AND status != 'CANCELADA'
+    `,
+    [id]
+    );
+
+    if (reservas[0].total > 0) {
+    return res.status(400).json({
+        success: false,
+        message: `Cliente possui ${reservas[0].total} reserva(s) ativa(s) e não pode ser removido`
+    });
+    }
+
+
+    await pool.query(
+      'DELETE FROM customers WHERE id = ?',
+      [id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Cliente deletado com sucesso'
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao deletar cliente'
+    });
+  }
 };

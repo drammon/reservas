@@ -83,6 +83,12 @@ app.use('/api/customers', customersRoutes);
 const tablesRoutes = require('./routes/tables');
 
 app.use('/api/tables', tablesRoutes);
+
+
+const reservationsRoutes = require('./routes/reservations');
+
+app.use('/api/reservations', reservationsRoutes);
+
 // ============================================
 // TRATAMENTO DE ERROS
 // ============================================
