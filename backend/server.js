@@ -64,21 +64,11 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
-// ============================================
-// AQUI VIRÃO AS ROTAS DE INGREDIENTES E RECEITAS
-// (serão adicionadas nos próximos módulos)
-// ============================================
-
-
 // Importação das rotas
 const customersRoutes = require('./routes/customers');
 
 // Registro das rotas
 app.use('/api/customers', customersRoutes);
-
-// app.use('/api/ingredientes', ingredientesRoutes);
-// app.use('/api/receitas', receitasRoutes);
-
 
 const tablesRoutes = require('./routes/tables');
 
