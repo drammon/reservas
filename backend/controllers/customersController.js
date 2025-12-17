@@ -85,13 +85,13 @@ exports.criar = async (req, res) => {
         // Verifica se já existe cliente com o mesmo nome
         const [existente] = await pool.query(
             'SELECT id FROM customers WHERE name = ?',
-            [name]
+            [phone]
         );
 
         if (existente.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: 'Já existe um cliente com este nome'
+                message: 'Já existe um cliente com este numero'
             });
         }
 
