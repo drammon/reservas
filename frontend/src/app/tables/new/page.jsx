@@ -80,20 +80,7 @@ export default function NewTable() {
           />
         </div>
 
-        {/* Status */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Status
-          </label>
-          <select
-            className="w-full border p-2 rounded"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="ATIVA">ATIVA</option>
-            <option value="INATIVA">INATIVA</option>
-          </select>
-        </div>
+        
 
         {/* Botões */}
         <div className="flex gap-3 pt-4">
