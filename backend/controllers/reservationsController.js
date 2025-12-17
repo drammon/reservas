@@ -174,6 +174,53 @@ exports.atualizarStatus = async (req, res) => {
 };
 
 // ============================================
+// CONFIRMAR RESERVA
+// ============================================
+exports.confirmar = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [reserva] = await pool.query(
+      'SELECT * FROM reservations WHERE id = ?',
+      [id]
+    );
+
+    if (reserva.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Reserva não encontrada'
+      });
+    }
+
+    if (reserva[0].status === 'CANCELADA') {
+      return res.status(400).json({
+        success: false,
+        message: 'Reserva cancelada não pode ser confirmada'
+      });
+    }
+
+    await pool.query(
+      'UPDATE reservations SET status = "CONFIRMADA" WHERE id = ?',
+      [id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Reserva confirmada com sucesso'
+    });
+
+  } catch (error) {
+    console.error('Erro ao confirmar reserva:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao confirmar reserva',
+      error: error.message
+    });
+  }
+};
+
+
+// ============================================
 // 4. CANCELAR (DELETAR) RESERVA
 // ============================================
 exports.deletar = async (req, res) => {
@@ -210,4 +257,21 @@ exports.deletar = async (req, res) => {
             error: error.message
         });
     }
+};
+
+exports.limparTodas = async (req, res) => {
+  try {
+    await pool.query('DELETE FROM reservations');
+
+    res.json({
+      success: true,
+      message: 'Todas as reservas foram removidas'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao limpar reservas'
+    });
+  }
 };

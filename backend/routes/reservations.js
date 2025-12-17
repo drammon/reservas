@@ -7,5 +7,7 @@ router.get('/', reservationsController.listarTodas);
 router.post('/', reservationsController.criar);
 router.patch('/:id/status', reservationsController.atualizarStatus);
 router.delete('/:id', reservationsController.deletar);
+router.put('/:id/confirm', reservationsController.confirmar);
+router.delete('/', reservationsController.limparTodas);
 
 module.exports = router;

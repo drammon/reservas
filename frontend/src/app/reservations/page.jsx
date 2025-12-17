@@ -26,6 +26,31 @@ export default function Reservations() {
     }
   };
 
+  // ✅ CONFIRMAR RESERVA
+  const confirmarReserva = async (id) => {
+    const confirmar = confirm('Deseja confirmar esta reserva?');
+    if (!confirmar) return;
+
+    try {
+      await reservationsService.confirmar(id);
+
+      toast.success('Reserva confirmada com sucesso');
+
+      setReservations(prev =>
+        prev.map(r =>
+          r.id === id ? { ...r, status: 'CONFIRMADA' } : r
+        )
+      );
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        'Não foi possível confirmar a reserva'
+      );
+      console.error(error);
+    }
+  };
+
+  // ✅ CANCELAR RESERVA
   const cancelarReserva = async (id) => {
     const confirmar = confirm('Deseja realmente cancelar esta reserva?');
     if (!confirmar) return;
@@ -48,6 +73,29 @@ export default function Reservations() {
       console.error(error);
     }
   };
+  // ✅ LIMPAR RESERVAS
+
+  const limparReservas = async () => {
+  const confirmar = confirm(
+    'ATENÇÃO: Isso irá remover TODAS as reservas. Deseja continuar?'
+  );
+
+  if (!confirmar) return;
+
+  try {
+    await reservationsService.limpar(); // endpoint novo
+
+    toast.success('Todas as reservas foram removidas com sucesso');
+    setReservations([]);
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+      'Não foi possível limpar as reservas'
+    );
+    console.error(error);
+  }
+};
+
 
   if (loading) {
     return <p className="p-8 text-center">Carregando reservas...</p>;
@@ -87,14 +135,31 @@ export default function Reservations() {
                 <td className="p-2 border">
                   {reservation.status}
                 </td>
-                <td className="p-2 border text-center">
-                  {reservation.status !== 'CANCELADA' && (
-                    <button
-                      className="text-red-600 hover:underline"
-                      onClick={() => cancelarReserva(reservation.id)}
-                    >
-                      Cancelar
-                    </button>
+                <td className="p-2 border text-center space-x-3">
+                  {reservation.status === 'PENDENTE' && (
+                    <>
+                      <button
+                        className="text-green-600 hover:underline"
+                        onClick={() => confirmarReserva(reservation.id)}
+                      >
+                        Confirmar
+                      </button>
+
+                      <button
+                        className="text-red-600 hover:underline"
+                        onClick={() => cancelarReserva(reservation.id)}
+                      >
+                        Cancelar
+                      </button>
+                    </>
+                  )}
+
+                  {reservation.status === 'CONFIRMADA' && (
+                    <span className="text-green-700 font-semibold">Confirmada</span>
+                  )}
+
+                  {reservation.status === 'CANCELADA' && (
+                    <span className="text-gray-500 italic">Cancelada</span>
                   )}
                 </td>
               </tr>
@@ -109,6 +174,12 @@ export default function Reservations() {
       >
         + Nova Reserva
       </Link>
+      <button
+        onClick={limparReservas}
+        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-pink-600 transition ml-5"
+      >
+        Limpar todas
+      </button>
     </div>
   );
 }

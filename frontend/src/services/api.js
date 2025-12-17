@@ -90,7 +90,16 @@ export const reservationsService = {
     const res = await api.delete(`/reservations/${id}`);
     return res.data;
   },
+  confirmar: async (id) => {
+    const res = await api.put(`/reservations/${id}/confirm`);
+    return res.data;
+  },
+  limpar: async () => {
+    const res = await api.delete('/reservations');
+    return res.data;
+  },
 };
+
 
 /* ===============================
    INTERCEPTOR DE ERRO

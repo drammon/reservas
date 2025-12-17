@@ -162,8 +162,9 @@ exports.deletar = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Verifica se a mesa existe
     const [tables] = await pool.query(
-      'SELECT id, status FROM tables WHERE id = ?',
+      'SELECT * FROM tables WHERE id = ?',
       [id]
     );
 
@@ -174,29 +175,45 @@ exports.deletar = async (req, res) => {
       });
     }
 
-    if (tables[0].status === 'INATIVA') {
+    // 🔥 Verifica APENAS reservas ATIVAS
+    const [reservas] = await pool.query(
+      `SELECT COUNT(*) AS total
+       FROM reservations
+       WHERE table_id = ?
+       AND status != 'CANCELADA'`,
+      [id]
+    );
+
+    if (reservas[0].total > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Mesa já está inativa'
+        message: `Mesa possui ${reservas[0].total} reserva(s) ativa(s) e não pode ser removida`
       });
     }
 
-    // 🔥 Inativação lógica (CORRETO)
+    // 🧹 Remove reservas CANCELADAS (obrigatório por causa da FK)
     await pool.query(
-      'UPDATE tables SET status = "INATIVA" WHERE id = ?',
+      'DELETE FROM reservations WHERE table_id = ?',
+      [id]
+    );
+
+    // Remove a mesa
+    await pool.query(
+      'DELETE FROM tables WHERE id = ?',
       [id]
     );
 
     res.json({
       success: true,
-      message: 'Mesa inativada com sucesso'
+      message: 'Mesa removida com sucesso'
     });
 
   } catch (error) {
-    console.error('Erro ao inativar mesa:', error);
+    console.error('Erro ao deletar mesa:', error);
     res.status(500).json({
       success: false,
-      message: 'Erro ao inativar mesa'
+      message: 'Erro ao deletar mesa',
+      error: error.message
     });
   }
 };
