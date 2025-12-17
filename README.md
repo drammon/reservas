@@ -140,17 +140,6 @@ frontend/
  └─ styles/
 ```
 
----
-
-## 🚀 Próximas Melhorias
-
-- Autenticação de usuários
-- Paginação de listas
-- Filtro por data/status de reservas
-- Soft delete para clientes e mesas
-- Dashboard com métricas
-
----
 
 ## 👨‍💻 Autor
 
