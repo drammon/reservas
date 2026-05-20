@@ -1,8 +1,24 @@
 # Dependências
 node_modules/
+backend/node_modules/
+frontend/node_modules/
 
 # Variáveis de ambiente
 .env
+backend/.env
+frontend/.env
+
+# Next.js build
+.next/
+frontend/.next/
+
+# Build
+dist/
+build/
+out/
+
+# Coverage de testes
+coverage/
 
 # Logs
 *.log
@@ -11,3 +27,12 @@ npm-debug.log*
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Arquivos de ambiente extras
+.env.local
+.env.development.local
+.env.production.local
