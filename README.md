@@ -148,7 +148,9 @@ frontend/
 
 ## CI Pipeline
 
+## Integração contínua
 
+Este projeto usa o GitHub Actions para automatizar validações de processos, incluindo dependencias de instalação, execução de lint, testes automatizados e verificação da build do Frontend.
 
 ## 👨‍💻 Autor
 
