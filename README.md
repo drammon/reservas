@@ -87,12 +87,16 @@ Sistema web para gerenciamento de **clientes**, **mesas** e **reservas** de um r
 
 ## ▶️ Como Executar o Projeto
 
-### 1️⃣ Clonar o repositório
+### 1 - Clonar o repositório
 ```bash
 git clone https://github.com/seu-usuario/seu-repositorio.git
 ```
-
-### 2️⃣ Backend
+### 2 - Configurando o database
+```mysql
+mysql -u root -p (efetue login)
+SOURCE C:/Users/alunos/Documents/reservas/backend/database/restaurante_db.sql
+```
+### 2 - Backend
 ```bash
 cd backend
 npm install
@@ -107,7 +111,7 @@ DB_PASSWORD=senha
 DB_NAME=restaurante_db
 ```
 
-### 3️⃣ Frontend
+### 3 - Frontend
 ```bash
 cd frontend
 npm install
@@ -140,17 +144,6 @@ frontend/
  └─ styles/
 ```
 
----
-
-## 🚀 Próximas Melhorias
-
-- Autenticação de usuários
-- Paginação de listas
-- Filtro por data/status de reservas
-- Soft delete para clientes e mesas
-- Dashboard com métricas
-
----
 
 ## 👨‍💻 Autor
 
