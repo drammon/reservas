@@ -145,7 +145,14 @@ frontend/
 ```
 
 
+
+## CI Pipeline
+
+
+
 ## 👨‍💻 Autor
 
 **Dayvid Ramon**  
 Projeto desenvolvido para fins acadêmicos e prática de desenvolvimento Full Stack.
+
+CI Status: GitHub Actions
